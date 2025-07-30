@@ -16,5 +16,10 @@ public class StockBackTest {
         // 现在config就是初始化好的单例实例, 可以通过Getter与Setter自由访问
         config.setCash(111.0);
         System.out.println(config.getCash());
+
+        // 尝试进行下单
+        TradeBehavior.orderOpenStock("000001.XSHE", 1.0, 10.0, null, null, null, null, null, null, null, null, null,"");
+        System.out.println(config.getStockCounter().keySet()); // LinkedHashMap, 是不是可以考虑换成别的, 比如TreeMap？
+
     }
 }
