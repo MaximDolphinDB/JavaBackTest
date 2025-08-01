@@ -283,7 +283,7 @@ class CounterBehavior(TradeBehavior):
                 'static_loss': static_loss,
                 'dynamic_profit': dynamic_profit,
                 'dynamic_loss': dynamic_loss})
-            Dict = self.stock_summary[symbol].copy()
+            # Dict = self.stock_summary[symbol].copy()
             # 更新买入均价 & 持仓总量
             vol0, amount0 = self.stock_summary[symbol]["total_vol"], self.stock_summary[symbol]["total_vol"] * self.stock_summary[symbol]["ori_price"]
             vol1, amount1 = vol0+vol, amount0 + price * vol

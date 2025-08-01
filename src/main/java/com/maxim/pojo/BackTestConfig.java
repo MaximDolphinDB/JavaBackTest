@@ -71,15 +71,16 @@ public class BackTestConfig {
 
     // 柜台模块
     LinkedHashMap<Integer, Object> stockCounter = new LinkedHashMap<>();
-    Collection<String> stockRecord_state = new ArrayList<>(); // 股票成交记录
-    Collection<String> stockRecord_reason = new ArrayList<>();
-    Collection<LocalDate> stockRecord_date = new ArrayList<>();
-    Collection<Integer> stockRecord_minute = new ArrayList<>();
-    Collection<String> stockRecord_symbol = new ArrayList<>();
-    Collection<Double> stockRecord_price = new ArrayList<>();
-    Collection<Double> stockRecord_pnl = new ArrayList<>();
-    LinkedHashMap<String, Object> stockPosition = new LinkedHashMap<>(); // 当前股票持仓情况
-    LinkedHashMap stockSummary = new LinkedHashMap<>(); // 用于优化止盈止损
+    Collection<StockRecord> stockRecord = new ArrayList<>();
+//    Collection<String> stockRecord_state = new ArrayList<>(); // 股票成交记录
+//    Collection<String> stockRecord_reason = new ArrayList<>();
+//    Collection<LocalDate> stockRecord_date = new ArrayList<>();
+//    Collection<Integer> stockRecord_minute = new ArrayList<>();
+//    Collection<String> stockRecord_symbol = new ArrayList<>();
+//    Collection<Double> stockRecord_price = new ArrayList<>();
+//    Collection<Double> stockRecord_pnl = new ArrayList<>();
+    LinkedHashMap<String, ArrayList<Position>> stockPosition = new LinkedHashMap<>(); // 当前股票持仓情况
+    LinkedHashMap<String, StockSummary> stockSummary = new LinkedHashMap<>(); // 用于优化止盈止损
 
     // 评价模块
     Double cash;
@@ -554,67 +555,67 @@ public class BackTestConfig {
         this.stockCounter = stockCounter;
     }
 
-    public Collection<String> getStockRecord_state() {
-        return stockRecord_state;
-    }
+//    public Collection<String> getStockRecord_state() {
+//        return stockRecord_state;
+//    }
+//
+//    public void setStockRecord_state(Collection<String> stockRecord_state) {
+//        this.stockRecord_state = stockRecord_state;
+//    }
+//
+//    public Collection<String> getStockRecord_reason() {
+//        return stockRecord_reason;
+//    }
+//
+//    public void setStockRecord_reason(Collection<String> stockRecord_reason) {
+//        this.stockRecord_reason = stockRecord_reason;
+//    }
+//
+//    public Collection<LocalDate> getStockRecord_date() {
+//        return stockRecord_date;
+//    }
+//
+//    public void setStockRecord_date(Collection<LocalDate> stockRecord_date) {
+//        this.stockRecord_date = stockRecord_date;
+//    }
+//
+//    public Collection<Integer> getStockRecord_minute() {
+//        return stockRecord_minute;
+//    }
+//
+//    public void setStockRecord_minute(Collection<Integer> stockRecord_minute) {
+//        this.stockRecord_minute = stockRecord_minute;
+//    }
+//
+//    public Collection<String> getStockRecord_symbol() {
+//        return stockRecord_symbol;
+//    }
+//
+//    public void setStockRecord_symbol(Collection<String> stockRecord_symbol) {
+//        this.stockRecord_symbol = stockRecord_symbol;
+//    }
+//
+//    public Collection<Double> getStockRecord_price() {
+//        return stockRecord_price;
+//    }
+//
+//    public void setStockRecord_price(Collection<Double> stockRecord_price) {
+//        this.stockRecord_price = stockRecord_price;
+//    }
+//
+//    public Collection<Double> getStockRecord_pnl() {
+//        return stockRecord_pnl;
+//    }
+//
+//    public void setStockRecord_pnl(Collection<Double> stockRecord_pnl) {
+//        this.stockRecord_pnl = stockRecord_pnl;
+//    }
 
-    public void setStockRecord_state(Collection<String> stockRecord_state) {
-        this.stockRecord_state = stockRecord_state;
-    }
-
-    public Collection<String> getStockRecord_reason() {
-        return stockRecord_reason;
-    }
-
-    public void setStockRecord_reason(Collection<String> stockRecord_reason) {
-        this.stockRecord_reason = stockRecord_reason;
-    }
-
-    public Collection<LocalDate> getStockRecord_date() {
-        return stockRecord_date;
-    }
-
-    public void setStockRecord_date(Collection<LocalDate> stockRecord_date) {
-        this.stockRecord_date = stockRecord_date;
-    }
-
-    public Collection<Integer> getStockRecord_minute() {
-        return stockRecord_minute;
-    }
-
-    public void setStockRecord_minute(Collection<Integer> stockRecord_minute) {
-        this.stockRecord_minute = stockRecord_minute;
-    }
-
-    public Collection<String> getStockRecord_symbol() {
-        return stockRecord_symbol;
-    }
-
-    public void setStockRecord_symbol(Collection<String> stockRecord_symbol) {
-        this.stockRecord_symbol = stockRecord_symbol;
-    }
-
-    public Collection<Double> getStockRecord_price() {
-        return stockRecord_price;
-    }
-
-    public void setStockRecord_price(Collection<Double> stockRecord_price) {
-        this.stockRecord_price = stockRecord_price;
-    }
-
-    public Collection<Double> getStockRecord_pnl() {
-        return stockRecord_pnl;
-    }
-
-    public void setStockRecord_pnl(Collection<Double> stockRecord_pnl) {
-        this.stockRecord_pnl = stockRecord_pnl;
-    }
-
-    public LinkedHashMap<String, Object> getStockPosition() {
+    public LinkedHashMap<String, ArrayList<Position>> getStockPosition() {
         return stockPosition;
     }
 
-    public void setStockPosition(LinkedHashMap<String, Object> stockPosition) {
+    public void setStockPosition(LinkedHashMap<String, ArrayList<Position>> stockPosition) {
         this.stockPosition = stockPosition;
     }
 
