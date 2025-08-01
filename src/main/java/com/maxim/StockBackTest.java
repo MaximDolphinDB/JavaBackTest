@@ -13,17 +13,12 @@ public class StockBackTest {
         // 读取JSON文件内容
         String configPath = "D:\\Maxim\\JavaBackTest\\src\\main\\java\\com\\maxim\\backtest_config.json";
         String jsonContent = new String(Files.readAllBytes(Paths.get(configPath)));
-
-        // 使用BackTestConfig类中已有的getInstance方法
         BackTestConfig config = BackTestConfig.getInstance(jsonContent);
+        // Java单例设计模式, 获取全局配置项, 回测逻辑会实时修改里面的属性
 
-//        // 现在config就是初始化好的单例实例, 可以通过Getter与Setter自由访问
-//        config.setCash(111.0);
-//        System.out.println(config.getCash());
-
-//        // 尝试进行下单
-//        TradeBehavior.orderOpenStock("000001.XSHE", 1.0, 10.0, null, null, null, null, null, null, null, null, null,"");
-//        System.out.println(config.getStockCounter().keySet()); // LinkedHashMap, 是不是可以考虑换成别的, 比如TreeMap？
+        // 尝试进行下单
+        TradeBehavior.orderOpenStock("000001.XSHE", 1.0, 10.0, null, null, null, null, null, null, null, null, null,"");
+        System.out.println(config.getStockCounter().keySet()); // LinkedHashMap, 是不是可以考虑换成别的, 比如TreeMap，在不要求排序的地方从而提高性能？
 
         // [待实现]: 柜台逻辑
 
@@ -45,7 +40,6 @@ public class StockBackTest {
         }
 
         // 尝试进行平仓
-//        System.out.println(config.getStockPosition().keySet());
         CounterBehavior.closeStock("000001.XSHE", 1.0, 15.0, "");
         // 查看股票持仓
         for (String symbol: config.getStockPosition().keySet()){
