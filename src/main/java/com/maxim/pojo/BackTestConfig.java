@@ -53,12 +53,12 @@ public class BackTestConfig {
     String stockCounterJson;
 
     // 股票类
-    LinkedHashMap stockKDict = new LinkedHashMap<>();
-    LinkedHashMap stockMacroDict = new LinkedHashMap<>();
-    LinkedHashMap stockInfoDict = new LinkedHashMap<>();
+    LinkedHashMap<String, LinkedHashMap<Integer, StockBar>> stockKDict = new LinkedHashMap<>(); // stock_k_dict -> symbol -> minute -> OHLC KBAR(MinFreq)
+    LinkedHashMap<String, StockInfo> stockInfoDict = new LinkedHashMap<>(); // stock_info_dict -> symbol -> OHLC+startDate/endDate Info
     LinkedHashMap stockSignalDict = new LinkedHashMap<>();
     LinkedHashMap stockTimeStampDict = new LinkedHashMap<>();
     Collection<LocalDate> stockDateList = new ArrayList<>();
+    LinkedHashMap stockMacroDict = new LinkedHashMap<>();
     Collection<String> stockDotDateList = new ArrayList<>();
     Collection<String> stockStrDateList = new ArrayList<>();
     String stockKDataBase;
@@ -70,7 +70,7 @@ public class BackTestConfig {
     String stockSignalJson;
 
     // 柜台模块
-    LinkedHashMap<Integer, Object> stockCounter = new LinkedHashMap<>();
+    LinkedHashMap<Integer, StockOrder> stockCounter = new LinkedHashMap<>();
     Collection<StockRecord> stockRecord = new ArrayList<>();
 //    Collection<String> stockRecord_state = new ArrayList<>(); // 股票成交记录
 //    Collection<String> stockRecord_reason = new ArrayList<>();
@@ -547,11 +547,11 @@ public class BackTestConfig {
         this.stockSignalJson = stockSignalJson;
     }
 
-    public LinkedHashMap<Integer, Object> getStockCounter() {
+    public LinkedHashMap<Integer, StockOrder> getStockCounter() {
         return stockCounter;
     }
 
-    public void setStockCounter(LinkedHashMap<Integer, Object> stockCounter) {
+    public void setStockCounter(LinkedHashMap<Integer, StockOrder> stockCounter) {
         this.stockCounter = stockCounter;
     }
 

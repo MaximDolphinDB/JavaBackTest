@@ -2,6 +2,7 @@ package com.maxim.pojo;
 import java.time.*;
 
 public class Order{
+    protected String order_state;  // 后续每个inheritor的实例对象的属性值都不一样(open/close/long/short/buycall/...)
     String symbol; // 标的名称
     Double vol;
     Double price;

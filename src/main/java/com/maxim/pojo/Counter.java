@@ -1,0 +1,123 @@
+package com.maxim.pojo;
+import java.time.*;
+import java.util.LinkedHashMap;
+import java.util.Objects;
+
+public class Counter extends CounterBehavior{
+
+    // 回测中唯一用到的柜台对象
+    public Counter(){
+        super();
+    }
+
+    public static void processStockOrder(){
+        /*
+         柜台成交判断函数：
+         【开仓/平仓order处理后运行,可重复运行】柜台仅通过价格判断是否当前订单能够执行,若能则执行,并在柜台删除该订单
+        */
+
+        // 获取当前配置实例
+        BackTestConfig config = BackTestConfig.getInstance();
+        LocalDate date = config.currentDate;
+        Integer minute = config.currentMinute;
+        LocalDateTime current_timestamp = config.currentTimeStamp;
+        LinkedHashMap<Integer, StockOrder> stockCounter = config.getStockCounter();
+
+        for (Integer order_id: stockCounter.keySet()){
+            StockOrder order_obj = stockCounter.get(order_id);
+            // 获取当前订单对象的属性值
+            String order_state = order_obj.order_state;
+            String symbol = order_obj.symbol;
+            Double price = order_obj.price;
+            Double vol = order_obj.vol;
+            LocalDateTime min_order_timestamp = order_obj.min_order_timestamp;
+            LocalDateTime max_order_timestamp = order_obj.max_order_timestamp;
+
+            if (max_order_timestamp.isEqual(current_timestamp) || max_order_timestamp.isBefore(current_timestamp)){
+                config.stockCounter.remove(order_id); // 直接在全局配置实例项中删除对应的股票订单
+                System.out.println("OrderNum"+order_id+"Bahavior"+order_state+"-symbol:"+symbol+"price"+price+"vol"+vol+"failed[Out of Timestamp]");
+                
+            } else if (current_timestamp.isEqual(min_order_timestamp) || current_timestamp.isAfter(min_order_timestamp)) {
+                Double low = null;
+                Double high = null;
+                // 获取当前K线对象
+                LinkedHashMap<Integer, StockBar> kBar = config.stockKDict.get(symbol);
+
+                if (kBar.containsKey(minute)){
+                    // 说明由当前分钟的K线数据
+                    low = kBar.get(minute).low;
+                    high = kBar.get(minute).high;
+                }
+
+                if (low!=null && high!=null){
+                    // 说明这根K线上有该股票的数据
+                    if (low<=price && price<=high){ // 说明可以成交
+                        if (Objects.equals(order_state, "open")){
+                            CounterBehavior.executeStock(symbol, price, vol,
+                                    order_obj.static_profit, order_obj.static_loss,
+                                    order_obj.dynamic_profit, order_obj.dynamic_loss,
+                                    min_order_timestamp, max_order_timestamp,
+                                    order_obj.reason);
+                        } else if (Objects.equals(order_state, "close")) {
+                            CounterBehavior.closeStock(symbol, price, vol, order_obj.reason);
+                        }
+                        config.stockCounter.remove(order_id); // 删除柜台的订单
+                    }
+                }
+
+            }
+        }
+
+    }
+
+    public static void processStockOrderStrict(Double open_share_threshold, Double close_share_threshold){
+        /*
+        更严格的柜台成交判断函数：
+        当前开仓最多只能成交这根K线成交量的open_share_threshold倍
+        当前平仓最多只能成交这根K线成交量的close_share_threshold倍
+        */
+        // 获取当前配置实例
+        BackTestConfig config = BackTestConfig.getInstance();
+        LocalDate date = config.currentDate;
+        Integer minute = config.currentMinute;
+        LocalDateTime current_timestamp = config.currentTimeStamp;
+        LinkedHashMap<Integer, StockOrder> stockCounter = config.getStockCounter();
+
+        for (Integer order_id: stockCounter.keySet()){
+            StockOrder order_obj = stockCounter.get(order_id);
+            // 获取当前订单对象的属性值
+            String order_state = order_obj.order_state;
+            String symbol = order_obj.symbol;
+            Double price = order_obj.price;
+            Double vol = order_obj.vol;
+            LocalDateTime min_order_timestamp = order_obj.min_order_timestamp;
+            LocalDateTime max_order_timestamp = order_obj.max_order_timestamp;
+
+            if (max_order_timestamp.isEqual(current_timestamp) || max_order_timestamp.isBefore(current_timestamp)){
+                Double low = null;
+                Double high = null;
+                Double close = null;
+                Double volume = null;
+                if (config.stockKDict.containsKey(symbol)){
+                    // 获取当前K线对象
+                    LinkedHashMap<Integer, StockBar> kBars = config.stockKDict.get(symbol);
+                    if (kBars.containsKey(minute)){   // 说明存在当前标的的K线数据
+                        StockBar kBar = kBars.get(minute);
+                        low = kBar.low;
+                        high = kBar.high;
+                        close = kBar.close;
+                        volume = kBar.volume;
+                    }
+                }
+
+                if (low!=null && high!=null && close!=null && volume!=null){
+                    
+                }
+
+            }
+
+        }
+
+    }
+
+}
