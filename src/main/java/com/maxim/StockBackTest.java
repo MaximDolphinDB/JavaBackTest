@@ -17,7 +17,8 @@ public class StockBackTest {
         // Java单例设计模式, 获取全局配置项, 回测逻辑会实时修改里面的属性
 
         // 尝试进行下单
-        TradeBehavior.orderOpenStock("000001.XSHE", 1.0, 10.0, null, null, null, null, null, null, null, null, null,"");
+        TradeBehavior.orderOpenStock("000001.XSHE", 1.0, 10.0, null, null, null, null, null, null, null, null, null,"",false);
+        TradeBehavior.orderCloseStock("000001.XSHE", 1.0, 10.0, null, null, null, false);
         System.out.println(config.getStockCounter().keySet()); // LinkedHashMap, 是不是可以考虑换成别的, 比如TreeMap，在不要求排序的地方从而提高性能？
 
         // [待实现]: 柜台逻辑

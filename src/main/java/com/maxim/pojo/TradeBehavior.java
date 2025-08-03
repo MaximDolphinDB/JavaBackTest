@@ -18,7 +18,7 @@ public class TradeBehavior {
                                       Double dynamic_profit, Double dynamic_loss,
                                       LocalDateTime min_timestamp, LocalDateTime max_timestamp,
                                       LocalDateTime min_order_timestamp, LocalDateTime max_order_timestamp,
-                                      Double commission, String reason){
+                                      Double commission, String reason, Boolean partialOrder){
         /*
         【盘中运行】股票订单发送至stock_counter,
         min_timestamp: 最短持仓时间(在该時刻之前不能平仓)
@@ -69,7 +69,8 @@ public class TradeBehavior {
                 dynamic_profit,
                 dynamic_loss,
                 commission,
-                reason
+                reason,
+                partialOrder
         );
 
         // 将订单添加到柜台和记录中
@@ -82,7 +83,7 @@ public class TradeBehavior {
     public static void orderCloseStock(String symbol, Double vol, Double price,
                                        LocalDateTime min_order_timestamp,
                                        LocalDateTime max_order_timestamp,
-                                       String reason){
+                                       String reason, Boolean partialOrder){
         // 获取配置实例
         BackTestConfig config = BackTestConfig.getInstance();
 
@@ -107,7 +108,8 @@ public class TradeBehavior {
                 config.currentTimeStamp,
                 min_order_timestamp,
                 max_order_timestamp,
-                reason
+                reason,
+                partialOrder
         );
 
         // 将订单添加到柜台和记录中

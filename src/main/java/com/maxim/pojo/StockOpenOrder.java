@@ -4,27 +4,30 @@ import java.time.*;
 // 订单对象
 public class StockOpenOrder extends StockOrder{
     private final static String ORDER_STATE = "open";
-    private static LocalDateTime min_timestamp;
-    private static LocalDateTime max_timestamp;
-    private static Double static_profit;
-    private static Double static_loss;
-    private static Double dynamic_profit;
-    private static Double dynamic_loss;
-    private static Double commission;
+    protected LocalDateTime min_timestamp;
+    protected LocalDateTime max_timestamp;
+    protected Double static_profit;
+    protected Double static_loss;
+    protected Double dynamic_profit;
+    protected Double dynamic_loss;
+    private Double commission;
 
     public StockOpenOrder(String symbol, Double vol, Double price,
                           LocalDate create_date, LocalDateTime create_timestamp, LocalDateTime min_timestamp, LocalDateTime max_timestamp,
                           LocalDateTime min_order_timestamp, LocalDateTime max_order_timestamp,
                           Double static_profit, Double static_loss, Double dynamic_profit,
-                          Double dynamic_loss, Double commission, String reason) {
+                          Double dynamic_loss, Double commission, String reason, Boolean partialOrder) {
         super(symbol, vol, price, create_date, create_timestamp, min_order_timestamp, max_order_timestamp, reason);
         this.order_state = ORDER_STATE;
-        StockOpenOrder.min_timestamp = min_timestamp;
-        StockOpenOrder.max_timestamp = max_timestamp;
-        StockOpenOrder.static_profit = static_profit;
-        StockOpenOrder.static_loss = static_loss;
-        StockOpenOrder.dynamic_profit = dynamic_profit;
-        StockOpenOrder.dynamic_loss = dynamic_loss;
-        StockOpenOrder.commission = commission;
+        this.partialOrder = partialOrder;
+        this.min_timestamp = min_timestamp;
+        this.max_timestamp = max_timestamp;
+        this.static_profit = static_profit;
+        this.static_loss = static_loss;
+        this.dynamic_profit = dynamic_profit;
+        this.dynamic_loss = dynamic_loss;
+        this.commission = commission;
     }
+
+
 }

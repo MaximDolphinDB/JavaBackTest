@@ -111,7 +111,37 @@ public class Counter extends CounterBehavior{
                 }
 
                 if (low!=null && high!=null && close!=null && volume!=null){
-                    
+                    if (order_obj.partialOrder){
+                        price = close; // 说明是部分成交的订单, 第一次成交按照挂单价进行成交
+                    }
+                    if (low<=price && price<=high){
+                        if (Objects.equals(order_state, "open")){ // 开仓订单
+                            StockOpenOrder open_order = (StockOpenOrder) order_obj; // 强制类型转换为子类以获取更多属性
+                            Integer openVolThreshold = (int) (open_share_threshold * volume);
+                            if (vol <= openVolThreshold){
+                                config.stockCounter.remove(order_id);  // 删除柜台的订单
+                            }else{
+                                config.stockCounter.get(order_id).vol -= vol;
+                                config.stockCounter.get(order_id).partialOrder = true; // 当前订单是拆单后的部分订单
+                            }
+                            CounterBehavior.executeStock(symbol, price, vol,
+                                    open_order.static_profit, open_order.static_loss,
+                                    open_order.dynamic_profit, open_order.dynamic_loss,
+                                    open_order.min_timestamp, open_order.max_timestamp,
+                                    open_order.reason);
+                        }else if(Objects.equals(order_state, "close")){ // 平仓订单
+                            // StockCloseOrder close_order = (StockCloseOrder) order_obj; // 强制类型转换为子类以获取更多属性
+                            Integer closeVolThreshold = (int) (close_share_threshold * volume);
+                            if (vol <= closeVolThreshold){
+                                config.stockCounter.remove(order_id); // 删除柜台的订单
+                            }else{
+                                config.stockCounter.get(order_id).vol -= vol;
+                                config.stockCounter.get(order_id).partialOrder = true; // 当前订单是拆单后的部分订单
+                            }
+                            // 这里因为目前StockCloseOrder的属性相比StockOrder没有更多, 所以不用强制类型转换，可以直接拿属性
+                            CounterBehavior.closeStock(symbol, price, vol, order_obj.reason);
+                        }
+                    }
                 }
 
             }
