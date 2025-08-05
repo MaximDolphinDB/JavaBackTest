@@ -1,15 +1,15 @@
-package com.maxim.pojo;
+package com.maxim.pojo.summary;
 import java.time.LocalDateTime;
 
 public class Summary{
-    Double ori_price;
-    Double total_vol;
-    Double static_profit;
-    Double static_loss;
-    Double dynamic_profit;
-    Double dynamic_loss;
-    Double history_min;
-    Double history_max;
+    public Double ori_price;
+    public Double total_vol;
+    public Double static_profit;
+    public Double static_loss;
+    public Double dynamic_profit;
+    public Double dynamic_loss;
+    public Double history_min;
+    public Double history_max;
 
     // Constructor
     public Summary(Double ori_price, Double total_vol, Double static_profit, Double static_loss, Double dynamic_profit,

@@ -1,6 +1,14 @@
 package com.maxim.pojo;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.maxim.pojo.BackTestConfig;
+import com.maxim.pojo.TradeBehavior;
+import com.maxim.pojo.info.StockInfo;
+import com.maxim.pojo.kbar.StockBar;
+import com.maxim.pojo.position.Position;
+import com.maxim.pojo.position.StockPosition;
+import com.maxim.pojo.record.StockRecord;
+import com.maxim.pojo.summary.StockSummary;
 import com.xxdb.DBConnection;
 
 import java.text.ParseException;
@@ -12,7 +20,7 @@ import java.time.*;
 import java.util.Iterator;
 import java.util.LinkedHashMap;
 
-public class CounterBehavior extends TradeBehavior{
+public class CounterBehavior extends TradeBehavior {
     public CounterBehavior(){
         super();
     }

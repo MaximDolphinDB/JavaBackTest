@@ -2,6 +2,12 @@ package com.maxim.pojo;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.maxim.pojo.info.StockInfo;
+import com.maxim.pojo.kbar.StockBar;
+import com.maxim.pojo.order.StockOrder;
+import com.maxim.pojo.position.Position;
+import com.maxim.pojo.record.StockRecord;
+import com.maxim.pojo.summary.StockSummary;
 import com.xxdb.DBConnection;
 
 import java.text.ParseException;

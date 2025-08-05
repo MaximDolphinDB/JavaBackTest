@@ -1,4 +1,4 @@
-package com.maxim.pojo;
+package com.maxim.pojo.record;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;

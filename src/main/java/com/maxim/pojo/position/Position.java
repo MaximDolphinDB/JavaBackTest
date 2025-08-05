@@ -1,12 +1,12 @@
-package com.maxim.pojo;
+package com.maxim.pojo.position;
 import java.time.LocalDateTime;
 
 public class Position {
-    Double vol;
-    Double price;
-    LocalDateTime min_timestamp;
-    LocalDateTime max_timestamp;
-    Integer time_monitor;
+    public Double vol;
+    public Double price;
+    public LocalDateTime min_timestamp;
+    public LocalDateTime max_timestamp;
+    public Integer time_monitor;
 
     public Position(Double price, Double vol, LocalDateTime min_timestamp, LocalDateTime max_timestamp, Integer time_monitor) {
         this.price = price;

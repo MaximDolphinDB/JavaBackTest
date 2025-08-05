@@ -2,6 +2,9 @@ package com.maxim.pojo;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.maxim.pojo.BackTestConfig;
+import com.maxim.pojo.order.StockOpenOrder;
+import com.maxim.pojo.order.StockCloseOrder;
 import com.xxdb.DBConnection;
 
 import java.text.ParseException;

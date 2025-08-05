@@ -1,4 +1,4 @@
-package com.maxim.pojo;
+package com.maxim.pojo.position;
 import java.time.LocalDateTime;
 
 public class StockPosition extends Position{

@@ -1,7 +1,9 @@
 package com.maxim;
+import com.maxim.pojo.BackTestConfig;
+import com.maxim.pojo.CounterBehavior;
+import com.maxim.pojo.position.Position;
+import com.maxim.pojo.TradeBehavior;
 import com.maxim.pojo.*;
-import org.w3c.dom.css.Counter;
-
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.ArrayList;
@@ -11,7 +13,7 @@ import java.util.LinkedHashMap;
 public class StockBackTest {
     public static void main(String[] args) throws Exception{
         // 读取JSON文件内容
-        String configPath = "D:\\Maxim\\JavaBackTest\\src\\main\\java\\com\\maxim\\backtest_config.json";
+        String configPath = "D:\\FactorBrick\\JavaBackTest\\src\\main\\java\\com\\maxim\\backtest_config.json";
         String jsonContent = new String(Files.readAllBytes(Paths.get(configPath)));
         BackTestConfig config = BackTestConfig.getInstance(jsonContent);
         // Java单例设计模式, 获取全局配置项, 回测逻辑会实时修改里面的属性

@@ -1,4 +1,4 @@
-package com.maxim.pojo;
+package com.maxim.pojo.kbar;
 import java.time.*;
 
 

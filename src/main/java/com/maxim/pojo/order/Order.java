@@ -1,16 +1,16 @@
-package com.maxim.pojo;
+package com.maxim.pojo.order;
 import java.time.*;
 
 public class Order{
-    protected String order_state;  // 后续每个inheritor的实例对象的属性值都不一样(open/close/long/short/buycall/...)
-    String symbol; // 标的名称
-    Double vol;
-    Double price;
-    LocalDate create_date;
-    LocalDateTime create_timestamp;
-    LocalDateTime min_order_timestamp;
-    LocalDateTime max_order_timestamp;
-    String reason;
+    public String order_state;  // 后续每个inheritor的实例对象的属性值都不一样(open/close/long/short/buycall/...)
+    public String symbol; // 标的名称
+    public Double vol;
+    public Double price;
+    public LocalDate create_date;
+    public LocalDateTime create_timestamp;
+    public LocalDateTime min_order_timestamp;
+    public LocalDateTime max_order_timestamp;
+    public String reason;
 
     public Order(String symbol, Double vol, Double price, LocalDate create_date, LocalDateTime create_timestamp, LocalDateTime min_order_timestamp, LocalDateTime max_order_timestamp, String reason) {
         this.symbol = symbol;

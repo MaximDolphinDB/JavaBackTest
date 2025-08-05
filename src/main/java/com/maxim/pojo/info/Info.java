@@ -1,15 +1,15 @@
-package com.maxim.pojo;
+package com.maxim.pojo.info;
 import java.time.*;
 
 public class Info{
-    String symbol;
-    LocalDate tradeDate;
-    Double open;
-    Double high;
-    Double low;
-    Double close;
-    LocalDate start_date;
-    LocalDate end_date;
+    public String symbol;
+    public LocalDate tradeDate;
+    public Double open;
+    public Double high;
+    public Double low;
+    public Double close;
+    public LocalDate start_date;
+    public LocalDate end_date;
 
     public Info(LocalDate tradeDate, String symbol, Double open, Double high, Double low, Double close,
                 LocalDate start_date, LocalDate end_date) {

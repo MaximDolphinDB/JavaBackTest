@@ -1,16 +1,16 @@
-package com.maxim.pojo;
+package com.maxim.pojo.order;
 import java.time.*;
 
 // 订单对象
-public class StockOpenOrder extends StockOrder{
+public class StockOpenOrder extends StockOrder {
     private final static String ORDER_STATE = "open";
-    protected LocalDateTime min_timestamp;
-    protected LocalDateTime max_timestamp;
-    protected Double static_profit;
-    protected Double static_loss;
-    protected Double dynamic_profit;
-    protected Double dynamic_loss;
-    private Double commission;
+    public LocalDateTime min_timestamp;
+    public LocalDateTime max_timestamp;
+    public Double static_profit;
+    public Double static_loss;
+    public Double dynamic_profit;
+    public Double dynamic_loss;
+    public Double commission;
 
     public StockOpenOrder(String symbol, Double vol, Double price,
                           LocalDate create_date, LocalDateTime create_timestamp, LocalDateTime min_timestamp, LocalDateTime max_timestamp,

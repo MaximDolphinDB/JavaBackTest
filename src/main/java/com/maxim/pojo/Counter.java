@@ -1,4 +1,8 @@
 package com.maxim.pojo;
+import com.maxim.pojo.kbar.StockBar;
+import com.maxim.pojo.order.StockOpenOrder;
+import com.maxim.pojo.order.StockOrder;
+
 import java.time.*;
 import java.util.LinkedHashMap;
 import java.util.Objects;

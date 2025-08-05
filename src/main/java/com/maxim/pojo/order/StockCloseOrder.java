@@ -1,8 +1,8 @@
-package com.maxim.pojo;
+package com.maxim.pojo.order;
 import java.time.*;
 
 // 订单对象
-public class StockCloseOrder extends StockOrder{
+public class StockCloseOrder extends StockOrder {
     private static final String ORDER_STATE = "close";
 
     public StockCloseOrder(String symbol, Double vol, Double price, LocalDate create_date, LocalDateTime create_timestamp,

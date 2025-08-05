@@ -1,9 +1,9 @@
-package com.maxim.pojo;
+package com.maxim.pojo.summary;
 import java.time.LocalDateTime;
 
 public class StockSummary extends Summary{
-    Integer dynamic_monitor;
-    Integer static_monitor;
+    public Integer dynamic_monitor;
+    public Integer static_monitor;
     public StockSummary(Double ori_price, Double total_vol, Double static_profit, Double static_loss, Double dynamic_profit,
                         Double dynamic_loss, Double history_min, Double history_max){
         super(ori_price, total_vol, static_profit, static_loss, dynamic_profit, dynamic_loss, history_min, history_max);
