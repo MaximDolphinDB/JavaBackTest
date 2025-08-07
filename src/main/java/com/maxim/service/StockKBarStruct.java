@@ -23,15 +23,15 @@ public class StockKBarStruct {
         this.volumeCol = volumeCol;
     }
 
-    // 构造方式二：仅 time
-    public StockKBarStruct(String symbolCol, String timeCol, String openCol, String highCol, String lowCol, String closeCol, String volumeCol) {
-        this.symbolCol = symbolCol;
-        this.timeCol = timeCol;
-        this.openCol = openCol;
-        this.highCol = highCol;
-        this.lowCol = lowCol;
-        this.closeCol = closeCol;
-        this.volumeCol = volumeCol;
-    }
+//    // 构造方式二：仅 time
+//    public StockKBarStruct(String symbolCol, String timeCol, String openCol, String highCol, String lowCol, String closeCol, String volumeCol) {
+//        this.symbolCol = symbolCol;
+//        this.timeCol = timeCol;
+//        this.openCol = openCol;
+//        this.highCol = highCol;
+//        this.lowCol = lowCol;
+//        this.closeCol = closeCol;
+//        this.volumeCol = volumeCol;
+//    }
 }
 

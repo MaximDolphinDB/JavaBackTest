@@ -4,12 +4,11 @@ import com.maxim.pojo.order.StockOpenOrder;
 import com.maxim.pojo.order.StockOrder;
 
 import java.time.*;
-import java.util.LinkedHashMap;
-import java.util.Objects;
+import java.util.*;
 
 public class Counter extends CounterBehavior{
 
-    // 回测中唯一用到的柜台对象
+    // 回测中唯一用到的柜台类, 是所有交易对象类的子类, 能够调用所有方法
     public Counter(){
         super();
     }
@@ -19,6 +18,7 @@ public class Counter extends CounterBehavior{
          柜台成交判断函数：
          【开仓/平仓order处理后运行,可重复运行】柜台仅通过价格判断是否当前订单能够执行,若能则执行,并在柜台删除该订单
         */
+        // TODO: 获取InfoDict以减少判断次数
 
         // 获取当前配置实例
         BackTestConfig config = BackTestConfig.getInstance();
@@ -26,6 +26,15 @@ public class Counter extends CounterBehavior{
         Integer minute = config.currentMinute;
         LocalDateTime current_timestamp = config.currentTimeStamp;
         LinkedHashMap<Integer, StockOrder> stockCounter = config.getStockCounter();
+
+        HashMap<String, StockBar> stock_k_dict;
+        if (!config.stockKDict.containsKey(minute)){
+            return ;
+        }
+        stock_k_dict = config.stockKDict.get(minute);
+
+        // 收集需要删除的order_id
+        Collection<Integer> delete_ids = new ArrayList<>();
 
         for (Integer order_id: stockCounter.keySet()){
             StockOrder order_obj = stockCounter.get(order_id);
@@ -38,19 +47,19 @@ public class Counter extends CounterBehavior{
             LocalDateTime max_order_timestamp = order_obj.max_order_timestamp;
 
             if (max_order_timestamp.isEqual(current_timestamp) || max_order_timestamp.isBefore(current_timestamp)){
-                config.stockCounter.remove(order_id); // 直接在全局配置实例项中删除对应的股票订单
+                delete_ids.add(order_id); // 记录需要删除的订单id
+                // config.stockCounter.remove(order_id); // 直接在全局配置实例项中删除对应的股票订单
                 System.out.println("OrderNum"+order_id+"Bahavior"+order_state+"-symbol:"+symbol+"price"+price+"vol"+vol+"failed[Out of Timestamp]");
                 
             } else if (current_timestamp.isEqual(min_order_timestamp) || current_timestamp.isAfter(min_order_timestamp)) {
                 Double low = null;
                 Double high = null;
                 // 获取当前K线对象
-                LinkedHashMap<Integer, StockBar> kBar = config.stockKDict.get(symbol);
-
-                if (kBar.containsKey(minute)){
-                    // 说明由当前分钟的K线数据
-                    low = kBar.get(minute).low;
-                    high = kBar.get(minute).high;
+                if (stock_k_dict.containsKey(symbol)){
+                    StockBar kBar = stock_k_dict.get(symbol);
+                    // 说明由当前分钟当前标的的K线数据
+                    low = kBar.low;
+                    high = kBar.high;
                 }
 
                 if (low!=null && high!=null){
@@ -65,11 +74,15 @@ public class Counter extends CounterBehavior{
                         } else if (Objects.equals(order_state, "close")) {
                             CounterBehavior.closeStock(symbol, price, vol, order_obj.reason);
                         }
-                        config.stockCounter.remove(order_id); // 删除柜台的订单
+                        delete_ids.add(order_id); // 记录需要删除的订单id
+                        // config.stockCounter.remove(order_id); // 删除柜台的订单
                     }
                 }
-
             }
+        }
+        // 统一删除订单id
+        for (Integer order_id: delete_ids){
+            config.stockCounter.remove(order_id);
         }
 
     }
@@ -80,12 +93,20 @@ public class Counter extends CounterBehavior{
         当前开仓最多只能成交这根K线成交量的open_share_threshold倍
         当前平仓最多只能成交这根K线成交量的close_share_threshold倍
         */
+        // TODO: 获取InfoDict以减少判断次数
+
         // 获取当前配置实例
         BackTestConfig config = BackTestConfig.getInstance();
         LocalDate date = config.currentDate;
         Integer minute = config.currentMinute;
         LocalDateTime current_timestamp = config.currentTimeStamp;
         LinkedHashMap<Integer, StockOrder> stockCounter = config.getStockCounter();
+
+        HashMap<String, StockBar> stock_k_dict;
+        if (!config.stockKDict.containsKey(minute)){
+            return ;
+        }
+        stock_k_dict = config.stockKDict.get(minute);
 
         for (Integer order_id: stockCounter.keySet()){
             StockOrder order_obj = stockCounter.get(order_id);
@@ -102,16 +123,14 @@ public class Counter extends CounterBehavior{
                 Double high = null;
                 Double close = null;
                 Double volume = null;
-                if (config.stockKDict.containsKey(symbol)){
-                    // 获取当前K线对象
-                    LinkedHashMap<Integer, StockBar> kBars = config.stockKDict.get(symbol);
-                    if (kBars.containsKey(minute)){   // 说明存在当前标的的K线数据
-                        StockBar kBar = kBars.get(minute);
-                        low = kBar.low;
-                        high = kBar.high;
-                        close = kBar.close;
-                        volume = kBar.volume;
-                    }
+                // 获取当前K线对象
+                if (stock_k_dict.containsKey(symbol)){
+                    StockBar kBar = stock_k_dict.get(symbol);
+                    // 说明由当前分钟当前标的的K线数据
+                    low = kBar.low;
+                    high = kBar.high;
+                    close = kBar.close;
+                    volume = kBar.volume;
                 }
 
                 if (low!=null && high!=null && close!=null && volume!=null){
@@ -152,6 +171,10 @@ public class Counter extends CounterBehavior{
 
         }
 
+    }
+
+    public static void processStockOrderMySelf(){
+        // 自定义订单成交判断函数
     }
 
 }

@@ -16,6 +16,7 @@ import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.time.*;
+import java.util.HashMap;
 import java.util.LinkedHashMap;
 
 // JavaBean
@@ -59,8 +60,8 @@ public class BackTestConfig {
     String stockCounterJson;
 
     // 股票类
-    LinkedHashMap<String, LinkedHashMap<Integer, StockBar>> stockKDict = new LinkedHashMap<>(); // stock_k_dict -> symbol -> minute -> OHLC KBAR(MinFreq)
-    LinkedHashMap<String, StockInfo> stockInfoDict = new LinkedHashMap<>(); // stock_info_dict -> symbol -> OHLC+startDate/endDate Info
+    LinkedHashMap<Integer, HashMap<String, StockBar>> stockKDict = new LinkedHashMap<>(); // stock_k_dict -> minute -> symbol -> OHLC KBAR(MinFreq)
+    HashMap<String, StockInfo> stockInfoDict = new HashMap<>(); // stock_info_dict -> symbol -> OHLC+startDate/endDate Info
     LinkedHashMap stockSignalDict = new LinkedHashMap<>();
     LinkedHashMap stockTimeStampDict = new LinkedHashMap<>();
     Collection<LocalDate> stockDateList = new ArrayList<>();
@@ -433,7 +434,7 @@ public class BackTestConfig {
         this.stockCounterJson = stockCounterJson;
     }
 
-    public LinkedHashMap getStockKDict() {
+    public HashMap getStockKDict() {
         return stockKDict;
     }
 
@@ -449,11 +450,11 @@ public class BackTestConfig {
         this.stockMacroDict = stockMacroDict;
     }
 
-    public LinkedHashMap getStockInfoDict() {
+    public HashMap getStockInfoDict() {
         return stockInfoDict;
     }
 
-    public void setStockInfoDict(LinkedHashMap stockInfoDict) {
+    public void setStockInfoDict(HashMap stockInfoDict) {
         this.stockInfoDict = stockInfoDict;
     }
 

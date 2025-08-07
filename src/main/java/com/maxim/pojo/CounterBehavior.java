@@ -14,11 +14,8 @@ import com.xxdb.DBConnection;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.time.format.DateTimeFormatter;
-import java.util.ArrayList;
-import java.util.Collection;
+import java.util.*;
 import java.time.*;
-import java.util.Iterator;
-import java.util.LinkedHashMap;
 
 public class CounterBehavior extends TradeBehavior {
     public CounterBehavior(){
@@ -71,10 +68,9 @@ public class CounterBehavior extends TradeBehavior {
     }
 
     public static void closeStock(String symbol, Double price, Double vol, String reason){
-        Double profit = 0.0; // 该笔交易获得的盈利
-        Double margin = 0.0; // 该笔交易获得的保证金
+        double profit = 0.0; // 该笔交易获得的盈利
+        double margin = 0.0; // 该笔交易获得的保证金
         BackTestConfig config = BackTestConfig.getInstance(); // 获取BackTestConfig示例
-        ArrayList<Position> position = config.stockPosition.get(symbol);
         LinkedHashMap<String, StockSummary> summary = config.stockSummary; // 获取当前股票的持仓视图
 
         if (!config.stockPosition.isEmpty()){
@@ -117,6 +113,7 @@ public class CounterBehavior extends TradeBehavior {
                 // 获取当前可以平仓的最大数量
                 double max_vol = Math.min(current_vol, vol);
                 double record_vol = max_vol;
+
                 if (max_vol >= current_vol && state){  // 说明都可以平仓
                     // 先对视图进行批处理
                     summary.remove(symbol); // 删除该股票的持仓视图
@@ -128,8 +125,9 @@ public class CounterBehavior extends TradeBehavior {
                         profit += (price - ori_price) * position_vol;  // 逐笔盈亏
                     }
                     // 再对持仓进行处理
-                    position.remove(symbol); // 直接删除该股票的持有
+                    config.stockPosition.remove(symbol); // 直接删除该股票的持有
                 }else{  // 说明只有部分仓位可以被平
+
                     // 先对视图进行批处理
                     double vol0, amount0, vol1, amount1;
                     vol0 = summary.get(symbol).total_vol;
@@ -144,12 +142,12 @@ public class CounterBehavior extends TradeBehavior {
                         if (max_vol >= posVol){ // 当前订单全部平仓
                             margin += price*posVol;
                             profit += (price - posPrice) * posVol;
-                            position.remove(0); // FIFO Queue
+                            pos_list.remove(0); // FIFO Queue
                             max_vol -= posVol;
                         }else{ // 当前订单部分平仓
                             margin += price*max_vol;
                             profit += (price - posPrice) * max_vol;
-                            position.get(0).vol = posVol - max_vol; // FIFO Queue
+                            pos_list.get(0).vol = posVol - max_vol; // FIFO Queue
                             break;
                         }
                     }
@@ -161,7 +159,7 @@ public class CounterBehavior extends TradeBehavior {
                     // 结算
                     config.profit += profit;
                     config.cash += margin;  // 股票交易中一开始付出的现金可以理解为100%保证金
-                    config.stockPosition.put(symbol, position); // 更新股票持仓
+                    config.stockPosition.put(symbol, pos_list); // 更新股票持仓
                     config.stockSummary.put(symbol, summary.get(symbol));
                 }
 
@@ -190,16 +188,16 @@ public class CounterBehavior extends TradeBehavior {
         // String minute = Integer.toString(config.currentMinute);
         Integer minute = config.currentMinute;
         LocalDateTime timestamp = config.currentTimeStamp;
-        LinkedHashMap<String, LinkedHashMap<Integer, StockBar>> stock_k_dict = config.stockKDict;
-        LinkedHashMap<String, StockInfo> stock_info_dict = config.stockInfoDict;
+        // LinkedHashMap<Integer, HashMap<String, StockBar>> stock_k_dict = config.stockKDict;
+        if (!config.stockKDict.containsKey(minute)){
+            return ;
+        }
+        HashMap<String, StockBar> stock_k_dict = config.stockKDict.get(minute);
+        HashMap<String, StockInfo> stock_info_dict = config.stockInfoDict;
 
         for (String symbol: pos.keySet()){
             StockInfo info_dict = stock_info_dict.get(symbol);
-            LinkedHashMap<Integer, StockBar> k_dict = stock_k_dict.get(symbol);
-            if (k_dict.containsKey(minute)){
-                continue;
-            } // k_dicts 为所有分钟K线, 全部读进内存之后慢慢取出
-            StockBar kBar = k_dict.get(minute); // 当前股票分钟Bar
+            StockBar kBar = stock_k_dict.get(symbol); // 当前股票分钟Bar
             StockSummary summary = config.stockSummary.get(symbol); // 当前股票持仓视图
 
             // Step0. 获取基本信息并更新股票视图
