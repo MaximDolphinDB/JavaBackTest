@@ -136,33 +136,32 @@ public class CounterBehavior extends TradeBehavior {
                     amount1 = amount0 + vol * price;
                     summary.get(symbol).ori_price = amount1 / vol1;
                     // 再对持仓进行处理
-                    for (int i=0; i<current_vol_list.size(); i++){
+                    for (int i=0; i<current_vol_list.size(); i++) {
                         Double posVol = current_vol_list.get(i);
                         Double posPrice = ori_price_list.get(i);
-                        if (max_vol >= posVol){ // 当前订单全部平仓
-                            margin += price*posVol;
+                        if (max_vol >= posVol) { // 当前订单全部平仓
+                            margin += price * posVol;
                             profit += (price - posPrice) * posVol;
                             pos_list.remove(0); // FIFO Queue
                             max_vol -= posVol;
-                        }else{ // 当前订单部分平仓
-                            margin += price*max_vol;
+                        } else { // 当前订单部分平仓
+                            margin += price * max_vol;
                             profit += (price - posPrice) * max_vol;
                             pos_list.get(0).vol = posVol - max_vol; // FIFO Queue
                             break;
                         }
                     }
-                    // 记录本次交易
-                    StockRecord R = new StockRecord("close", reason, config.currentDate, config.currentMinute, config.currentTimeStamp,
-                            symbol, price, record_vol, profit);
-                    config.stockRecord.add(R);
-
-                    // 结算
-                    config.profit += profit;
-                    config.cash += margin;  // 股票交易中一开始付出的现金可以理解为100%保证金
                     config.stockPosition.put(symbol, pos_list); // 更新股票持仓
-                    config.stockSummary.put(symbol, summary.get(symbol));
                 }
+                // 记录本次交易
+                StockRecord R = new StockRecord("close", reason, config.currentDate, config.currentMinute, config.currentTimeStamp,
+                        symbol, price, record_vol, profit);
+                config.stockRecord.add(R);
 
+                // 结算
+                config.profit += profit;
+                config.cash += margin;  // 股票交易中一开始付出的现金可以理解为100%保证金
+                config.stockSummary.put(symbol, summary.get(symbol));
             }
 
         }else{
@@ -250,7 +249,8 @@ public class CounterBehavior extends TradeBehavior {
 
                 // Step1. 给出时间维度基本判断(当天后续回测时间是否需要继续监视该订单)-持仓时间维度
                 if (time_monitor == 0){  // 如果还没判断过 (time_monitor = 0)
-                    if (min_date.isEqual(date) || min_date.isAfter(date)){
+                    // if (min_date.isEqual(date) || min_date.isAfter(date)){
+                    if (min_date.isAfter(date)){
                         // T+1 制度, 禁止当日平仓
                         time_monitor = -2;
                     } else if (end_date.isAfter(date) && min_date.isBefore(date) && date.isBefore(max_date)) {

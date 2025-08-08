@@ -557,6 +557,7 @@ public class BackTestConfig {
     public LinkedHashMap<Integer, StockOrder> getStockCounter() {
         return stockCounter;
     }
+    // TODO: 评估这里是HashMap 还是应该是 LinkedHashMap, 因为order_id已经是同步自增的序号了，按理说LinkedHashMap会保持插入顺序, 问题是否需要排序呢
 
     public void setStockCounter(LinkedHashMap<Integer, StockOrder> stockCounter) {
         this.stockCounter = stockCounter;

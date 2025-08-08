@@ -61,7 +61,6 @@ public class Counter extends CounterBehavior{
                     low = kBar.low;
                     high = kBar.high;
                 }
-
                 if (low!=null && high!=null){
                     // 说明这根K线上有该股票的数据
                     if (low<=price && price<=high){ // 说明可以成交

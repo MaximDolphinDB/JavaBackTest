@@ -26,8 +26,8 @@ public class StockBackTest {
         // 读取JSON文件内容
         String configPath = "D:\\Maxim\\BackTest\\JavaBackTest\\src\\main\\java\\com\\maxim\\backtest_config.json";
         String jsonContent = new String(Files.readAllBytes(Paths.get(configPath)));
-        BackTestConfig config = BackTestConfig.getInstance(jsonContent);
         // Java单例设计模式, 获取全局配置项, 回测逻辑会实时修改里面的属性
+        BackTestConfig config = BackTestConfig.getInstance(jsonContent);
 
         // for (date in date_list){
         LocalDate tradeDate = LocalDate.of(2023, 2, 1);
@@ -54,24 +54,17 @@ public class StockBackTest {
                 Counter.orderOpenStock("000001", 20.0, 14.93, null, null, null, null, null, null, null, null, null, "", false);
             }
 
+            if (minute == 1305){
+                Counter.orderCloseStock("000001", 10.0, 14.7, null,LocalDateTime.of(2023, 2, 1, 15, 0, 0), "", false);
+            }
+
             // 柜台逻辑
             Counter.processStockOrder();
             Counter.monitorStockPosition(true);
+            System.out.println("Minute:"+minute+"Cash"+config.getCash()+"Profit"+config.getProfit());
 
-//            // 查看股票持仓
-//            for (String symbol : config.getStockPosition().keySet()) {
-//                Collection<Position> pos_list = config.getStockPosition().get(symbol);
-//                if (pos_list.size() > 1) {
-//                    for (Position pos : pos_list) {
-//                        System.out.println(symbol + ":" + pos.getVol());
-//                    }
-//                } else {
-//                    System.out.println(symbol + ":" + config.getStockPosition().get(symbol).get(0).getVol());
-//                }
-//            }
-
-            // System.out.println("Minute BackTest Ended"+timestamp);
         }
+        // 当天回测结束
         // 查看股票持仓
         for (String symbol : config.getStockPosition().keySet()) {
             Collection<Position> pos_list = config.getStockPosition().get(symbol);
@@ -83,5 +76,6 @@ public class StockBackTest {
                 System.out.println(symbol + ":" + config.getStockPosition().get(symbol).get(0).getVol());
             }
         }
+
     }
 }

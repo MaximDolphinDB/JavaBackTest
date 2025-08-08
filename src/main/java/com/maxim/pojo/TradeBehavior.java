@@ -56,7 +56,7 @@ public class TradeBehavior {
             orderNum = config.orderNum;
         }
 
-        // 创建订单对象（比HashMap更高效）
+        // 创建订单对象
         StockOpenOrder order = new StockOpenOrder(
                 symbol,
                 vol,
