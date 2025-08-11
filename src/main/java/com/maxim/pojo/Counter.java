@@ -107,6 +107,8 @@ public class Counter extends CounterBehavior{
         }
         stock_k_dict = config.stockKDict.get(minute);
 
+        // 收集需要删除的order_id
+        Collection<Integer> delete_ids = new ArrayList<>();
         for (Integer order_id: stockCounter.keySet()){
             StockOrder order_obj = stockCounter.get(order_id);
             // 获取当前订单对象的属性值
@@ -116,8 +118,10 @@ public class Counter extends CounterBehavior{
             Double vol = order_obj.vol;
             LocalDateTime min_order_timestamp = order_obj.min_order_timestamp;
             LocalDateTime max_order_timestamp = order_obj.max_order_timestamp;
-
             if (max_order_timestamp.isEqual(current_timestamp) || max_order_timestamp.isBefore(current_timestamp)){
+                delete_ids.add(order_id); // 记录需要删除的订单id
+                System.out.println("OrderNum"+order_id+"Bahavior"+order_state+"-symbol:"+symbol+"price"+price+"vol"+vol+"failed[Out of Timestamp]");
+            } else if (current_timestamp.isEqual(min_order_timestamp) || current_timestamp.isAfter(min_order_timestamp)){
                 Double low = null;
                 Double high = null;
                 Double close = null;
@@ -139,30 +143,38 @@ public class Counter extends CounterBehavior{
                     if (low<=price && price<=high){
                         if (Objects.equals(order_state, "open")){ // 开仓订单
                             StockOpenOrder open_order = (StockOpenOrder) order_obj; // 强制类型转换为子类以获取更多属性
-                            Integer openVolThreshold = (int) (open_share_threshold * volume);
+                            Double openVolThreshold = (open_share_threshold * volume);
                             if (vol <= openVolThreshold){
                                 config.stockCounter.remove(order_id);  // 删除柜台的订单
                             }else{
-                                config.stockCounter.get(order_id).vol -= vol;
+                                config.stockCounter.get(order_id).vol -= openVolThreshold;
                                 config.stockCounter.get(order_id).partialOrder = true; // 当前订单是拆单后的部分订单
+                                vol = openVolThreshold;
                             }
-                            CounterBehavior.executeStock(symbol, price, vol,
-                                    open_order.static_profit, open_order.static_loss,
-                                    open_order.dynamic_profit, open_order.dynamic_loss,
-                                    open_order.min_timestamp, open_order.max_timestamp,
-                                    open_order.reason);
+                            if (vol > 0.0){ // TODO: 这里由于会出现那种空Bar, 导致这里乘上去是不能成交的, 所以需要加入判断
+                                CounterBehavior.executeStock(symbol, price, vol,
+                                        open_order.static_profit, open_order.static_loss,
+                                        open_order.dynamic_profit, open_order.dynamic_loss,
+                                        open_order.min_timestamp, open_order.max_timestamp,
+                                        open_order.reason);
+                            }
                         }else if(Objects.equals(order_state, "close")){ // 平仓订单
                             // StockCloseOrder close_order = (StockCloseOrder) order_obj; // 强制类型转换为子类以获取更多属性
-                            Integer closeVolThreshold = (int) (close_share_threshold * volume);
+                            Double closeVolThreshold = (close_share_threshold * volume);
                             if (vol <= closeVolThreshold){
                                 config.stockCounter.remove(order_id); // 删除柜台的订单
                             }else{
                                 config.stockCounter.get(order_id).vol -= vol;
                                 config.stockCounter.get(order_id).partialOrder = true; // 当前订单是拆单后的部分订单
+                                vol = closeVolThreshold;
                             }
                             // 这里因为目前StockCloseOrder的属性相比StockOrder没有更多, 所以不用强制类型转换，可以直接拿属性
-                            CounterBehavior.closeStock(symbol, price, vol, order_obj.reason);
+                            if (vol > 0.0){
+                                CounterBehavior.closeStock(symbol, price, vol, order_obj.reason);
+                            }
+
                         }
+                        delete_ids.add(order_id); // 记录需要删除的订单id
                     }
                 }
 

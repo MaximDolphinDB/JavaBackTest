@@ -51,15 +51,15 @@ public class StockBackTest {
 
             // 尝试进行下单
             if (minute == 932){
-                Counter.orderOpenStock("000001", 20.0, 14.93, null, null, null, null, null, null, null, null, null, "", false);
+                Counter.orderOpenStock("000001", 2000000.0, 14.93, null, null, null, null, null, null, null, null, null, "", false);
             }
 
             if (minute == 1305){
-                Counter.orderCloseStock("000001", 10.0, 14.7, null,LocalDateTime.of(2023, 2, 1, 15, 0, 0), "", false);
+                Counter.orderCloseStock("000001", 1000000.0, 14.7, null,LocalDateTime.of(2023, 2, 1, 15, 0, 0), "", false);
             }
 
             // 柜台逻辑
-            Counter.processStockOrder();
+            Counter.processStockOrderStrict(0.001,0.001);
             Counter.monitorStockPosition(true);
             System.out.println("Minute:"+minute+"Cash"+config.getCash()+"Profit"+config.getProfit());
 
