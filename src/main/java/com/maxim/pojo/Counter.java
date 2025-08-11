@@ -145,7 +145,8 @@ public class Counter extends CounterBehavior{
                             StockOpenOrder open_order = (StockOpenOrder) order_obj; // 强制类型转换为子类以获取更多属性
                             Double openVolThreshold = (open_share_threshold * volume);
                             if (vol <= openVolThreshold){
-                                config.stockCounter.remove(order_id);  // 删除柜台的订单
+                                delete_ids.add(order_id);
+                                // config.stockCounter.remove(order_id);  // 删除柜台的订单
                             }else{
                                 config.stockCounter.get(order_id).vol -= openVolThreshold;
                                 config.stockCounter.get(order_id).partialOrder = true; // 当前订单是拆单后的部分订单
@@ -162,9 +163,10 @@ public class Counter extends CounterBehavior{
                             // StockCloseOrder close_order = (StockCloseOrder) order_obj; // 强制类型转换为子类以获取更多属性
                             Double closeVolThreshold = (close_share_threshold * volume);
                             if (vol <= closeVolThreshold){
-                                config.stockCounter.remove(order_id); // 删除柜台的订单
+                                delete_ids.add(order_id);
+                                // config.stockCounter.remove(order_id); // 删除柜台的订单
                             }else{
-                                config.stockCounter.get(order_id).vol -= vol;
+                                config.stockCounter.get(order_id).vol -= closeVolThreshold;
                                 config.stockCounter.get(order_id).partialOrder = true; // 当前订单是拆单后的部分订单
                                 vol = closeVolThreshold;
                             }
@@ -172,14 +174,17 @@ public class Counter extends CounterBehavior{
                             if (vol > 0.0){
                                 CounterBehavior.closeStock(symbol, price, vol, order_obj.reason);
                             }
-
                         }
-                        delete_ids.add(order_id); // 记录需要删除的订单id
                     }
                 }
 
             }
 
+        }
+
+        // 统一删除订单id
+        for (Integer order_id: delete_ids){
+            config.stockCounter.remove(order_id);
         }
 
     }
